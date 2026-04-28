@@ -6,7 +6,8 @@ import java.awt.event.*;
 public class CanvasPanel extends JPanel {
     private static final int TILE_SIZE = 20;
     private static final int GRID_SIZE = 16;
-    private boolean[][] painted = new boolean[GRID_SIZE][GRID_SIZE];
+    private Color[][] painted = new Color[GRID_SIZE][GRID_SIZE];
+    private Color selectedColor = Color.BLACK;
 
     /* Constructor */
     public CanvasPanel(){
@@ -29,8 +30,8 @@ public class CanvasPanel extends JPanel {
     /*Draw the grid */
         for (int row = 0; row < GRID_SIZE; row++) {
             for (int col = 0; col < GRID_SIZE; col++) {
-                if (painted[row][col]){
-                    g.setColor(Color.BLACK);
+                if (painted[row][col] != null) {
+                    g.setColor(painted[row][col]);
                 } else {
                     g.setColor(Color.WHITE);
                 }
@@ -45,9 +46,13 @@ public class CanvasPanel extends JPanel {
         int col = x / TILE_SIZE;
         int row = y / TILE_SIZE;
         if ( row >= 0 && row < GRID_SIZE && col >= 0 && col < GRID_SIZE){
-            painted[row][col] = true;
+            painted[row][col] = selectedColor;
             repaint();
         }
+    }
+
+    public void setColor(Color c){
+        selectedColor = c;
     }
 
 }
