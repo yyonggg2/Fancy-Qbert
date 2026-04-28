@@ -11,9 +11,10 @@ public class Main {
         CanvasPanel canvas = new CanvasPanel();
         frame.add(canvas, BorderLayout.CENTER);
 
+        /*Color Palette */
         JPanel palette = new JPanel();
+        frame.add(palette, BorderLayout.SOUTH);
         Color[] colors = {Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.MAGENTA, Color.CYAN};
-
         for (Color c : colors) {
             JButton colorButton = new JButton();
             colorButton.setBackground(c);
@@ -23,7 +24,11 @@ public class Main {
             colorButton.addActionListener(e -> canvas.setColor(c));
             palette.add(colorButton);
         }
-        frame.add(palette, BorderLayout.SOUTH);
+
+        /*Preview Panel */
+        PreviewPanel preview = new PreviewPanel(canvas);
+        frame.add(preview, BorderLayout.EAST);
+        canvas.setPreview(preview);
 
         frame.setVisible(true);
 

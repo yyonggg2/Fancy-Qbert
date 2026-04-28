@@ -1,6 +1,5 @@
-import javax.swing.JPanel;
-import java.awt.Graphics;
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class CanvasPanel extends JPanel {
@@ -8,6 +7,7 @@ public class CanvasPanel extends JPanel {
     private static final int GRID_SIZE = 16;
     private Color[][] painted = new Color[GRID_SIZE][GRID_SIZE];
     private Color selectedColor = Color.BLACK;
+    private PreviewPanel preview;
 
     /* Constructor */
     public CanvasPanel(){
@@ -48,11 +48,28 @@ public class CanvasPanel extends JPanel {
         if ( row >= 0 && row < GRID_SIZE && col >= 0 && col < GRID_SIZE){
             painted[row][col] = selectedColor;
             repaint();
+            if (preview != null) {
+                preview.repaint();
+            }
         }
+    
     }
 
     public void setColor(Color c){
         selectedColor = c;
     }
+
+    public Color[][] getPixels(){
+        return painted;
+    }
+
+    public int getGridSize(){
+        return GRID_SIZE;
+    }
+
+    public void setPreview(PreviewPanel preview){
+        this.preview = preview;
+    }
+
 
 }
