@@ -26,6 +26,9 @@ public class CanvasPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
        super.paintComponent(g);
+       Graphics2D g2 = (Graphics2D) g;
+       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+
 
     /*Draw the grid */
         for (int row = 0; row < GRID_SIZE; row++) {
@@ -71,5 +74,14 @@ public class CanvasPanel extends JPanel {
         this.preview = preview;
     }
 
+    public void clean(){
+        for (int row = 0; row < GRID_SIZE; row++) {
+            for (int col = 0; col < GRID_SIZE; col++) {
+                painted[row][col] = null;
+            }
+        repaint();
+        if (preview != null) preview.repaint();
+    }
 
+}
 }
