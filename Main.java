@@ -10,7 +10,10 @@ public class Main {
         frame.setLayout(new BorderLayout());
 
         CanvasPanel canvas = new CanvasPanel();
-        frame.add(canvas, BorderLayout.CENTER);
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.setBackground(Color.BLACK);
+        centerWrapper.add(canvas);
+        frame.add(centerWrapper, BorderLayout.CENTER);
 
         // Creation of cabinet and cabinetpanel
         ArrayList<Color[][]> cabinet = new ArrayList<>();
@@ -28,7 +31,25 @@ public class Main {
             colorButton.setBorderPainted(false);
             colorButton.addActionListener(e -> canvas.setColor(c));
             palette.add(colorButton);
+
         }
+
+        //Erase Button
+        JButton eraseBtn = new JButton("Eraser");
+        eraseBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        eraseBtn.addActionListener(e -> canvas.setColor(null));
+        palette.add(eraseBtn);
+
+        //Color Picker Button
+        JButton colorPickerBtn = new JButton("Custom Color");
+        colorPickerBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        colorPickerBtn.addActionListener(e -> {
+            Color selectedColor = JColorChooser.showDialog(frame, "Choose Color", Color.BLACK);
+            if (selectedColor != null) {
+                canvas.setColor(selectedColor);
+            }
+        });
+        palette.add(colorPickerBtn);
 
         /*Preview Panel */
         PreviewPanel preview = new PreviewPanel(canvas);
@@ -90,9 +111,6 @@ public class Main {
             canvas.clean();
         });
     
-
-
-
         // button bar
         JPanel buttonBar = new JPanel();
         buttonBar.add(playBtn);

@@ -11,6 +11,8 @@ public class CanvasPanel extends JPanel {
 
     /* Constructor */
     public CanvasPanel(){
+        setBackground(new Color(100, 100, 100));
+        setPreferredSize(new Dimension(GRID_SIZE * TILE_SIZE, GRID_SIZE * TILE_SIZE));
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 paintCell(e.getX(), e.getY());
@@ -35,11 +37,10 @@ public class CanvasPanel extends JPanel {
             for (int col = 0; col < GRID_SIZE; col++) {
                 if (painted[row][col] != null) {
                     g.setColor(painted[row][col]);
-                } else {
-                    g.setColor(Color.WHITE);
+                    g.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
-                g.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                g.setColor(Color.GRAY);
+                g.setColor(Color.WHITE);
+                g.drawRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 g.drawRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
             }
