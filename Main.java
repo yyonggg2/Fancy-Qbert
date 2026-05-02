@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,9 +17,11 @@ public class Main {
         frame.add(centerWrapper, BorderLayout.CENTER);
 
         // Creation of cabinet and cabinetpanel
-        ArrayList<Color[][]> cabinet = new ArrayList<>();
-        CabinetPanel cabinetPanel = new CabinetPanel(cabinet);
+        ArrayList<PixelCharacter> localCabinet = CabinetStorage.loadLocal();
+        ArrayList<PixelCharacter> globalCabinet = new ArrayList<>();
 
+        CabinetPanel cabinetPanel = new CabinetPanel(localCabinet);
+        
         /*Color Palette */
         JPanel palette = new JPanel();
         frame.add(palette, BorderLayout.SOUTH);
@@ -74,19 +77,44 @@ public class Main {
         // Store button — saves your pixel drawing to a the cabinet for later retrieval
         JButton storeBtn = new JButton("Store");
         storeBtn.setFont(new Font("Arial", Font.BOLD, 16));
+
         storeBtn.addActionListener(e -> {
-            // *** THIS LINE saves your pixel drawing to the cabinet for later retrieval ***
+            boolean isEmpty = true;
             Color[][] original = canvas.getPixels();
+            for (Color[] row : original) {
+                for (Color cell : row) {
+                    if (cell != null) { isEmpty = false; break; }
+                }
+            }
+            if (isEmpty) {
+                JOptionPane.showMessageDialog(frame, "Cannot store an empty character.");
+                return;
+            }
             Color[][] copy = new Color[original.length][original[0].length];
             for (int r = 0; r < original.length; r++) {
                 for (int c = 0; c < original[r].length; c++) {
                     copy[r][c] = original[r][c];
                 }
             }
-            cabinet.add(copy);
+            String name = JOptionPane.showInputDialog(frame, "Enter a name for your character:");
+            if (name == null || name.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please enter a name.");
+                return;
+            }
+            String[] options = {"Private", "Public"};
+            int choice = JOptionPane.showOptionDialog(frame, "How do you want to store this character?", "Store",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            localCabinet.add(new PixelCharacter(name, copy));
+            CabinetStorage.save(localCabinet);
+            if (choice == 1) {
+                boolean success = SupabaseClient.upload(name, copy);
+                System.out.println("Upload success: " + success);
+            }
             cabinetPanel.repaint();
-            JOptionPane.showMessageDialog(frame, "Your character has been stored in the cabinet!");
+            JOptionPane.showMessageDialog(frame, "Your character has been stored!");
         });
+    
+
 
         //Cabinet button (open the cabinet)
         JButton cabinetBtn = new JButton("Cabinet");
@@ -95,13 +123,35 @@ public class Main {
             JFrame cabinetFrame = new JFrame("Cabinet");
             cabinetFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             cabinetFrame.add(cabinetPanel);
-            cabinetFrame.pack();
-            cabinetFrame.setVisible(true);
 
             // Back Button
             JButton backBtn = new JButton("Back");
             backBtn.addActionListener(back -> cabinetFrame.dispose());
             cabinetFrame.add(backBtn, BorderLayout.SOUTH);
+
+            // Load Global Button
+            JButton loadCommunityBtn = new JButton("Global");
+            loadCommunityBtn.addActionListener(s -> {
+                List<PixelCharacter> globalCharacters = SupabaseClient.fetchGlobal();
+                globalCabinet.clear();
+                globalCabinet.addAll(globalCharacters);
+                cabinetPanel.setList(globalCabinet);
+            });
+
+            // Load Local Button
+            JButton loadPrivateBtn = new JButton("Private");
+            loadPrivateBtn.addActionListener(i -> {
+                cabinetPanel.setList(localCabinet);
+            });
+
+            JPanel cabinetBar = new JPanel();
+            cabinetBar.add(loadPrivateBtn);
+            cabinetBar.add(loadCommunityBtn);
+            cabinetFrame.add(cabinetBar, BorderLayout.NORTH);
+
+            cabinetFrame.pack();
+            cabinetFrame.setVisible(true);
+
         });
 
         //Clean Button - clean the canvas
@@ -120,5 +170,5 @@ public class Main {
         frame.add(buttonBar, BorderLayout.NORTH);
 
         frame.setVisible(true);
-        }
     }
+}

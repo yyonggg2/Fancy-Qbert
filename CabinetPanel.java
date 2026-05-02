@@ -5,13 +5,13 @@ import java.awt.event.*;
 
 
 public class CabinetPanel extends JPanel {
-    private ArrayList<Color[][]> cabinet;
+    private ArrayList<PixelCharacter> cabinet;
     private int selectedIndex = -1;
 
     // receive the canbinet list
-    public CabinetPanel(ArrayList<Color[][]> cabinet) {
+    public CabinetPanel(ArrayList<PixelCharacter> cabinet) {
         this.cabinet = cabinet;
-        setPreferredSize(new Dimension(500, 120));
+        setPreferredSize(new Dimension(500, 135));
         setBackground(Color.DARK_GRAY);
 
         // Mouse listener for selection
@@ -31,7 +31,7 @@ public class CabinetPanel extends JPanel {
         super.paintComponent(g);
         int x = 10;
         for (int i = 0; i < cabinet.size(); i++){
-            Color[][] pixels = cabinet.get(i);
+            Color[][] pixels = cabinet.get(i).getImage();
             for (int r = 0; r < pixels.length; r++){
                 for (int c = 0; c < pixels[r].length; c++){
                     Color color = pixels[r][c];
@@ -47,6 +47,9 @@ public class CabinetPanel extends JPanel {
             // The light border for the thumbnails
             g.setColor(selectedIndex == i ? Color.YELLOW : Color.WHITE);
             g.drawRect(x - 1, 9, 98, 98);
+            g.setColor(Color.WHITE);
+            g.drawString(cabinet.get(i).getName(), x, 125);
+            setPreferredSize(new Dimension(500, 140));
             x += 106; // 16 pixels * 6 size + 10 padding
         }
     }
@@ -55,8 +58,14 @@ public class CabinetPanel extends JPanel {
         if (selectedIndex == -1 || cabinet.isEmpty()){
             return null;
         }
-        return cabinet.get(selectedIndex);
+        return cabinet.get(selectedIndex).getImage();
     }
+
+    public void setList(ArrayList<PixelCharacter> list) {
+        this.cabinet = list;
+        repaint();
+    }
+
 
 
 }
