@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class CanvasPanel extends JPanel {
     private static final int TILE_SIZE = 20;
-    private static final int GRID_SIZE = 16;
+    private static final int GRID_SIZE = 20;
     private Color[][] painted = new Color[GRID_SIZE][GRID_SIZE];
     private Color selectedColor = Color.BLACK;
     private PreviewPanel preview;

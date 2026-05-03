@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
+import java.util.*;
 
 public class GamePanel extends JPanel implements KeyListener {
 
@@ -19,8 +19,18 @@ public class GamePanel extends JPanel implements KeyListener {
     private int visitedCount = 0;
     private boolean gameOver = false;
     private boolean won = false;
+    private Color[][] character;
+
+    // fields for jumping
+    private boolean isJumping = false;
+    private float jumpT = 0f;
+    private int startX, startY, endX, endY;
+    private int pendingRow, pendingCol;
+    private javax.swing.Timer jumpTimer;
+
 
     public GamePanel(Color[][] character) {
+        this.character = character;
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(800, 520));
         setFocusable(true);
@@ -31,7 +41,25 @@ public class GamePanel extends JPanel implements KeyListener {
         }
         visited[0][0] = true;
         visitedCount = 1;
+
+        jumpTimer = new javax.swing.Timer(16, e -> {
+            if (isJumping) {
+                jumpT += 0.1f;
+                if (jumpT >= 1f) {
+                    jumpT = 1f;
+                    jumpTimer.stop();
+                    isJumping = false;
+                    playerRow = pendingRow;
+                    playerCol = pendingCol;
+                    landOnTile();
+                    }
+                repaint();
+            }
+        });
     }
+
+
+
 
     private int tileX(int row, int col) {
         return CENTER_X + (2 * col - row) * W;
@@ -86,30 +114,16 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawPolygon(rightFace(cx, cy));
     }
 
-    private void drawQbert(Graphics g, int cx, int cy) {
-        //Body
-        g.setColor(new Color(225,140,0));
-        g.fillOval(cx - 18, cy - 18, 36, 36);
-
-        //Eyes
-        g.setColor(Color.WHITE);
-        g.fillOval(cx - 10, cy - 10, 8, 8);
-        g.fillOval(cx + 2, cy - 10, 8, 8);
-        g.setColor(Color.BLACK);
-        g.fillOval(cx - 8, cy - 8, 4, 4);
-        g.fillOval(cx + 4, cy - 8, 4, 4);   
-
-        //Nose
-        g.setColor(new Color(200,100,0));
-        g.fillOval(cx - 4, cy - 2, 8, 8);
-        
-        //Legs
-        g.setColor(new Color(200, 100, 0));
-        g.drawLine(cx - 12, cy + 18, cx - 18, cy + 30);
-        g.drawLine(cx - 4,  cy + 18, cx - 8,  cy + 30);
-        g.drawLine(cx + 4,  cy + 18, cx + 8,  cy + 30);
-        g.drawLine(cx + 12, cy + 18, cx + 18, cy + 30);
-
+    private void drawCharacter(Graphics g, int cx, int cy) {
+        if (character == null) return;
+        for (int r = 0; r < character.length; r++) {
+            for (int c = 0; c < character[r].length; c++) {
+                if (character[r][c] != null) {
+                    g.setColor(character[r][c]);
+                    g.fillRect(cx - 20 + c * 2, cy - 20 + r * 2, 2, 2);
+                }
+            }
+        }
     }
     @Override
     protected void paintComponent(Graphics g) {
@@ -124,7 +138,14 @@ public class GamePanel extends JPanel implements KeyListener {
         // Placeholder orange circle for the player — we'll replace this together
         int px = tileX(playerRow, playerCol);
         int py = tileY(playerRow, playerCol);
-        drawQbert(g, px, py);
+        if (isJumping) {
+            int cx = (int)(startX + (endX - startX) * jumpT);
+            int cy = (int)(startY + (endY - startY) * jumpT - 30 * 4 * jumpT * (1 - jumpT));
+            drawCharacter(g, cx, cy);
+        } else {
+            drawCharacter(g, px, py);
+        }
+
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 16));
@@ -146,20 +167,31 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     private void movePlayer(int newRow, int newCol) {
-        if (gameOver || won) return;
+        if (gameOver || won || isJumping) return;
         if (newRow < 0 || newRow >= ROWS || newCol < 0 || newCol > newRow) {
             loseLife();
             return;
         }
-        playerRow = newRow;
-        playerCol = newCol;
+        startX = tileX(playerRow, playerCol);
+        startY = tileY(playerRow, playerCol);
+        endX = tileX(newRow, newCol);
+        endY = tileY(newRow, newCol);
+        pendingRow = newRow;
+        pendingCol = newCol;
+        isJumping = true;
+        jumpT = 0f;
+        jumpTimer.start();
+    }
+
+    private void landOnTile() {
         if (!visited[playerRow][playerCol]) {
             visited[playerRow][playerCol] = true;
             visitedCount++;
             score += 25;
+        }if (visitedCount == 28) {
+            won = true;
+            repaint();
         }
-        if (visitedCount == 28) won = true;
-        repaint();
     }
 
     private void loseLife() {

@@ -46,11 +46,11 @@ public class CabinetPanel extends JPanel {
             }
             // The light border for the thumbnails
             g.setColor(selectedIndex == i ? Color.YELLOW : Color.WHITE);
-            g.drawRect(x - 1, 9, 98, 98);
+            g.drawRect(x - 1, 9, 122, 122); // 20 pixels * 6 size + 2 for border
             g.setColor(Color.WHITE);
-            g.drawString(cabinet.get(i).getName(), x, 125);
+            g.drawString(cabinet.get(i).getName(), x, 150);
             setPreferredSize(new Dimension(500, 140));
-            x += 106; // 16 pixels * 6 size + 10 padding
+            x += 130; // 20 pixels * 6 size + 10 padding
         }
     }
 

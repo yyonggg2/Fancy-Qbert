@@ -6,7 +6,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Qbert Pixel Canvas");
-        frame.setSize(600, 700);
+        frame.setMinimumSize(new Dimension(800, 700));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -25,17 +25,20 @@ public class Main {
         /*Color Palette */
         JPanel palette = new JPanel();
         frame.add(palette, BorderLayout.SOUTH);
-        Color[] colors = {Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.MAGENTA, Color.CYAN};
-        for (Color c : colors) {
+        Color[] recentColors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.MAGENTA, Color.CYAN, Color.WHITE};
+        JButton[] colorButtons = new JButton[8];
+        for (int i = 0; i < recentColors.length; i++) {
             JButton colorButton = new JButton();
-            colorButton.setBackground(c);
+            colorButton.setBackground(recentColors[i]);
             colorButton.setPreferredSize(new Dimension(50, 50));
             colorButton.setOpaque(true);
             colorButton.setBorderPainted(false);
-            colorButton.addActionListener(e -> canvas.setColor(c));
+            final int idx = i;
+            colorButton.addActionListener(e -> canvas.setColor(recentColors[idx]));
             palette.add(colorButton);
-
+            colorButtons[i] = colorButton;
         }
+
 
         //Erase Button
         JButton eraseBtn = new JButton("Eraser");
@@ -50,7 +53,16 @@ public class Main {
             Color selectedColor = JColorChooser.showDialog(frame, "Choose Color", Color.BLACK);
             if (selectedColor != null) {
                 canvas.setColor(selectedColor);
-            }
+                // making sure the recent colors list is updated when you pick a custom color, and limit the size to 8
+                for (int j = recentColors.length - 1; j > 0; j--) {
+                    recentColors[j] = recentColors[j-1];
+                    }
+                    recentColors[0] = selectedColor;
+                    for (int j = 0; j < colorButtons.length; j++) {
+                        colorButtons[j].setBackground(recentColors[j]);
+                    }
+
+                }
         });
         palette.add(colorPickerBtn);
 
