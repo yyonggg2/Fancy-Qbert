@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -71,14 +72,30 @@ public class Main {
         frame.add(preview, BorderLayout.EAST);
         canvas.setPreview(preview);
 
+        // Bubble text field — player types what their character says when hit (15 char max)
+        JTextField bubbleField = new JTextField("@#$%!", 10);
+        ((AbstractDocument) bubbleField.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (fb.getDocument().getLength() + string.length() <= 40)
+                    super.insertString(fb, offset, string, attr);
+            }
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                int newLen = fb.getDocument().getLength() - length + text.length();
+                if (newLen <= 40)
+                    super.replace(fb, offset, length, text, attrs);
+            }
+        });
+        bubbleField.setFont(new Font("Arial", Font.PLAIN, 14));
+
         // Play button — opens the game window with your drawn character as the sprite
         JButton playBtn = new JButton("▶ Play Game");
         playBtn.setFont(new Font("Arial", Font.BOLD, 16));
         playBtn.addActionListener(e -> {
             JFrame gameFrame = new JFrame("Fancy Qbert");
             gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            // *** THIS LINE passes your pixel drawing into the game as the character ***
-            GamePanel game = new GamePanel(cabinetPanel.getSelected());
+            GamePanel game = new GamePanel(cabinetPanel.getSelected(), bubbleField.getText());
             gameFrame.add(game);
             gameFrame.pack();
             gameFrame.setLocationRelativeTo(null);
@@ -179,6 +196,8 @@ public class Main {
         buttonBar.add(storeBtn);
         buttonBar.add(cabinetBtn);
         buttonBar.add(cleanBtn);
+        buttonBar.add(new JLabel("Death quote:"));
+        buttonBar.add(bubbleField);
         frame.add(buttonBar, BorderLayout.NORTH);
 
         frame.setVisible(true);
