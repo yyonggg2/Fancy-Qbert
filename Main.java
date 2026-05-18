@@ -34,7 +34,7 @@ public class Main {
                 CabinetStorage.save(localCabinet);
             }
             if (localCabinet.stream().noneMatch(c -> c.name.equals("Q*bert 2"))) {
-                localCabinet.add(1, new PixelCharacter("Q*bert 2", loadSpritePixels("/Users/student/Desktop/FANCY Qbert/sprites/Player/qbert2_sprite.png")));
+                localCabinet.add(1, new PixelCharacter("Q*bert 2", loadSpritePixels("sprites/Player/qbert2_sprite.png")));
                 CabinetStorage.save(localCabinet);
             }
 
@@ -170,7 +170,11 @@ public class Main {
         cabinetBtn.addActionListener(e -> {
             JFrame cabinetFrame = new JFrame("Cabinet");
             cabinetFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            cabinetFrame.add(cabinetPanel);
+            JScrollPane cabinetScroll = new JScrollPane(cabinetPanel);
+            cabinetScroll.setPreferredSize(new Dimension(550, 400));
+            cabinetScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            cabinetScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            cabinetFrame.add(cabinetScroll);
 
             // Back Button
             JButton backBtn = new JButton("Back");
@@ -245,7 +249,7 @@ public class Main {
     private static Color[][] createQbertPixels() {
         try {
             java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(
-                new java.io.File("/Users/student/Desktop/FANCY Qbert/sprites/Player/qbert_sprite.png"));
+                new java.io.File("sprites/Player/qbert_sprite.png"));
             int h = img.getHeight(), w = img.getWidth();
             Color[][] pixels = new Color[h][w];
             for (int r = 0; r < h; r++) {

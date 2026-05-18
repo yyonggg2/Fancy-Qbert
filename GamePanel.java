@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private static final int CENTER_X = 400;
     private static final int TOP_Y = 60;
     private static final int TOTAL_TILES = 28;
-    private static final String BASE       = "/Users/student/Desktop/FANCY Qbert/";
+    private static final String BASE       = "";
     private static final String SOUND_PATH = BASE + "sounds/";
     private static final String P_PATH     = BASE + "sprites/Player/";
     private static final String C_PATH     = BASE + "sprites/Coily/";
