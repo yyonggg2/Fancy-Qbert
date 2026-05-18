@@ -30,7 +30,7 @@ Jump across the isometric pyramid, color every tile to complete the level. Dodge
 
 ## Demo Video
 
-<video src="Demo%20video.MOV" controls width="700"></video>
+[![Demo Video](https://img.youtube.com/vi/Qhbb4gwPtaw/0.jpg)](https://youtu.be/Qhbb4gwPtaw?si=_Anop7jvSTrpkBjO)
 
 ---
 
