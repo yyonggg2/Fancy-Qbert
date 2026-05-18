@@ -626,33 +626,34 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-    // Draws player sprite — directional sprites when available, custom pixel art as fallback
+    // Draws player sprite — custom cabinet character takes priority; Q*bert sprites used as default
     private void drawCharacter(Graphics g, int cx, int cy) {
+        if (character != null) {
+            for (int r = 0; r < character.length; r++) {
+                for (int c = 0; c < character[r].length; c++) {
+                    if (character[r][c] != null) {
+                        g.setColor(character[r][c]);
+                        g.fillRect(cx - 20 + c * 2, cy - 20 + r * 2, 2, 2);
+                    }
+                }
+            }
+            return;
+        }
+        // No cabinet character selected — use Q*bert directional sprites
         if (playerIdleRight != null) {
             Color[][] sprite;
             if (!isJumping || playerMovingDown) {
-                sprite = playerIdleRight;           // idle or any downward jump → Right_Left
+                sprite = playerIdleRight;
             } else if (playerFacingRight) {
-                sprite = playerMoveRight;           // up-right jump → Up_Down_Moving_UFO
+                sprite = playerMoveRight;
             } else {
-                sprite = playerMoveLeft;            // up-left jump → Up_Down_Moving
+                sprite = playerMoveLeft;
             }
             drawSprite(g, sprite, cx, cy);
             return;
         }
-        if (character == null) {
-            g.setColor(new Color(225, 140, 0));
-            g.fillOval(cx - 15, cy - 15, 30, 30);
-            return;
-        }
-        for (int r = 0; r < character.length; r++) {
-            for (int c = 0; c < character[r].length; c++) {
-                if (character[r][c] != null) {
-                    g.setColor(character[r][c]);
-                    g.fillRect(cx - 20 + c * 2, cy - 20 + r * 2, 2, 2);
-                }
-            }
-        }
+        g.setColor(new Color(225, 140, 0));
+        g.fillOval(cx - 15, cy - 15, 30, 30);
     }
 
     // Draws the two flying discs using animated UFO sprite frames
@@ -811,8 +812,8 @@ public class GamePanel extends JPanel implements KeyListener {
     private void movePlayer(int newRow, int newCol) {
         if (gameOver || won || isJumping || isFalling || showBubble || isOnDisc) return;
 
-        // Left disc: player tries col = -1 (steps off left edge)
-        if (newCol == -1 && newRow >= 0 && newRow < ROWS && disc1Active) {
+        // Left disc: only catchable from row 3 (the row the disc sits beside)
+        if (newCol == -1 && playerRow == 3 && disc1Active) {
             disc1Active = false;
             score += 50;
             isOnDisc = true;
@@ -824,8 +825,8 @@ public class GamePanel extends JPanel implements KeyListener {
             if (slickActive) { slickMoveTimer.stop(); slickActive = false; startSlickFall(slickRow, slickCol); }
             return;
         }
-        // Right disc: player tries col = row+1 (steps off right edge)
-        if (newRow >= 0 && newRow < ROWS && newCol == newRow + 1 && disc2Active) {
+        // Right disc: only catchable from row 3 (the row the disc sits beside)
+        if (newCol == newRow + 1 && playerRow == 3 && disc2Active) {
             disc2Active = false;
             score += 50;
             isOnDisc = true;
