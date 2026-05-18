@@ -14,11 +14,30 @@ public class Main {
         CanvasPanel canvas = new CanvasPanel();
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setBackground(Color.BLACK);
-        centerWrapper.add(canvas);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0; gbc.gridy = 0; gbc.insets = new Insets(10, 0, 8, 0);
+        JLabel canvasLabel = new JLabel("Create your own character overhere!");
+        canvasLabel.setForeground(Color.WHITE);
+        canvasLabel.setFont(new Font("Papyrus", Font.BOLD, 24));
+        centerWrapper.add(canvasLabel, gbc);
+
+        gbc.gridy = 1; gbc.insets = new Insets(0, 0, 0, 0);
+        centerWrapper.add(canvas, gbc);
+
         frame.add(centerWrapper, BorderLayout.CENTER);
 
         // Creation of cabinet and cabinetpanel
         ArrayList<PixelCharacter> localCabinet = CabinetStorage.loadLocal();
+            if (localCabinet.stream().noneMatch(c -> c.name.equals("Q*bert"))) {
+                localCabinet.add(0, new PixelCharacter("Q*bert", createQbertPixels()));
+                CabinetStorage.save(localCabinet);
+            }
+            if (localCabinet.stream().noneMatch(c -> c.name.equals("Q*bert 2"))) {
+                localCabinet.add(1, new PixelCharacter("Q*bert 2", loadSpritePixels("/Users/student/Desktop/FANCY Qbert/sprites/Player/qbert2_sprite.png")));
+                CabinetStorage.save(localCabinet);
+            }
+
         ArrayList<PixelCharacter> globalCabinet = new ArrayList<>();
 
         CabinetPanel cabinetPanel = new CabinetPanel(localCabinet);
@@ -201,5 +220,45 @@ public class Main {
         frame.add(buttonBar, BorderLayout.NORTH);
 
         frame.setVisible(true);
+    }
+
+    private static Color[][] loadSpritePixels(String path) {
+        try {
+            java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(new java.io.File(path));
+            int h = img.getHeight(), w = img.getWidth();
+            Color[][] pixels = new Color[h][w];
+            for (int r = 0; r < h; r++) {
+                for (int c = 0; c < w; c++) {
+                    int argb = img.getRGB(c, r);
+                    int alpha = (argb >> 24) & 0xff;
+                    if (alpha > 10) pixels[r][c] = new Color(argb, true);
+                }
+            }
+            return pixels;
+        } catch (Exception e) {
+            System.out.println("Could not load sprite: " + path + ": " + e.getMessage());
+            return new Color[20][20];
+        }
+    }
+
+    // Loads the Q*bert sprite from qbert_sprite.png — transparent pixels become null
+    private static Color[][] createQbertPixels() {
+        try {
+            java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(
+                new java.io.File("/Users/student/Desktop/FANCY Qbert/sprites/Player/qbert_sprite.png"));
+            int h = img.getHeight(), w = img.getWidth();
+            Color[][] pixels = new Color[h][w];
+            for (int r = 0; r < h; r++) {
+                for (int c = 0; c < w; c++) {
+                    int argb = img.getRGB(c, r);
+                    int alpha = (argb >> 24) & 0xff;
+                    if (alpha > 10) pixels[r][c] = new Color(argb, true);
+                }
+            }
+            return pixels;
+        } catch (Exception e) {
+            System.out.println("Could not load qbert_sprite.png: " + e.getMessage());
+            return new Color[20][20];
+        }
     }
 }
