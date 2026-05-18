@@ -2,8 +2,6 @@
 
 A Java remake of the classic **Q*bert** arcade game — with a twist. Before you play, you draw your own character on a pixel canvas and it becomes your in-game sprite.
 
-Built as a CS final project using Java Swing.
-
 ---
 
 ## Create Your Character
@@ -27,6 +25,12 @@ Store your creations and load them back anytime. Switch between your private cha
 Jump across the isometric pyramid, color every tile to complete the level. Dodge enemies, use flying discs to escape, and survive as long as you can.
 
 ![Gameplay](Overall%20pic.png)
+
+---
+
+## Demo Video
+
+<video src="Demo%20video.MOV" controls width="700"></video>
 
 ---
 
