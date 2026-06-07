@@ -1,12 +1,12 @@
-# 🎮 Fancy Q*bert
+# Fancy Q*bert
 
-A Java remake of the classic **Q*bert** arcade game — with a twist. Before you play, you draw your own character on a pixel canvas and it becomes your in-game sprite.
+Q*bert remake for my CS final. The main feature is a pixel canvas where you draw your character before playing — that drawing becomes your actual in-game sprite.
 
 ---
 
-## Create Your Character
+## Draw Your Character
 
-Draw your own sprite on the pixel canvas before the game starts. Pick colors, use the eraser, or choose a custom color. Your drawing becomes the actual in-game character.You can also customize the death quote for it through the entering box at the right-up corner.
+There's a pixel canvas on the left where you draw before playing. You can pick from the color palette or use a custom color. There's also a text box in the top right where you type what your character says when it dies.
 
 ![Customize Page](CustomizePage.png)
 
@@ -14,7 +14,7 @@ Draw your own sprite on the pixel canvas before the game starts. Pick colors, us
 
 ## Character Cabinet
 
-Store your creations and load them back anytime. Switch between your private characters and community-uploaded ones. Select any character before hitting Play.
+Save your characters here and load them back later. You can also browse characters other people uploaded. Select one then hit Play.
 
 ![Storage Page](Storage%20page.png)
 
@@ -22,13 +22,13 @@ Store your creations and load them back anytime. Switch between your private cha
 
 ## Gameplay
 
-Jump across the isometric pyramid, color every tile to complete the level. Dodge enemies, use flying discs to escape, and survive as long as you can.
+Same as original Q*bert — jump around the pyramid and color every tile. Don't get hit by enemies.
 
 ![Gameplay](Overall%20pic.png)
 
 ---
 
-## Demo Video
+## Demo
 
 [![Demo Video](https://img.youtube.com/vi/Qhbb4gwPtaw/0.jpg)](https://youtu.be/Qhbb4gwPtaw?si=_Anop7jvSTrpkBjO)
 
@@ -38,9 +38,9 @@ Jump across the isometric pyramid, color every tile to complete the level. Dodge
 
 | Enemy | Behavior |
 |-------|----------|
-| **Coily** | Hatches from an egg, then chases you in all directions |
-| **Slick** | Hunts your colored tiles and reverts them. Appears from Level 3 |
-| **Red Ball** | Bounces randomly downward — deadly on contact |
+| **Coily** | Starts as an egg, hatches into a snake and chases you |
+| **Slick** | Goes after tiles you already colored and reverts them. Only from level 3 |
+| **Red Ball** | Bounces straight down randomly — just don't be in the way |
 
 ---
 
@@ -59,20 +59,15 @@ Jump across the isometric pyramid, color every tile to complete the level. Dodge
 
 ## How to Run
 
-1. Download `FancyQbert_demo.zip` from [Releases](../../releases)
-2. Unzip the folder
-3. Make sure Java is installed (`java -version` in terminal)
-4. Open Terminal, `cd` into the unzipped folder
-5. Run:
-```
-java -jar FancyQbert.jar
-```
+1. Download `FancyQbert_demo.zip` from [Releases](../../releases) and unzip it
+2. Check Java is installed: `java -version`
+3. Open Terminal, `cd` into the unzipped folder
+4. Run: `java -jar FancyQbert.jar`
 
 ---
 
 ## Built With
 
-- Java 17
-- Java Swing (UI & game rendering)
-- Supabase (community character sharing)
-- claude code (debugging, planning what the next step, and explaining me the functions I used in the game)
+- Java + Java Swing
+- Supabase (community character cabinet)
+- Claude Code (helped me debug and figure out Swing since I'd never used it before)
