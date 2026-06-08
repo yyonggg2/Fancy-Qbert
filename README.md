@@ -1,12 +1,12 @@
 # Fancy Q*bert
 
-Q*bert remake for my CS final. The main feature is a pixel canvas where you draw your character before playing — that drawing becomes your actual in-game sprite.
+Q*bert remake! The main feature is a pixel canvas where you draw your character before playing and that drawing becomes your actual character in the game.
 
 ---
 
 ## Draw Your Character
 
-There's a pixel canvas on the left where you draw before playing. You can pick from the color palette or use a custom color. There's also a text box in the top right where you type what your character says when it dies.
+There's a pixel canvas where you draw before playing. You can pick from the color palette or use a custom color. There's also a text box in the top right where you type what your character says when it dies.
 
 ![Customize Page](CustomizePage.png)
 
@@ -14,7 +14,7 @@ There's a pixel canvas on the left where you draw before playing. You can pick f
 
 ## Character Cabinet
 
-Save your characters here and load them back later. You can also browse characters other people uploaded. Select one then hit Play.
+Save your characters here. You can also browse characters other people uploaded. Select one then hit Play.
 
 ![Storage Page](Storage%20page.png)
 
@@ -22,7 +22,7 @@ Save your characters here and load them back later. You can also browse characte
 
 ## Gameplay
 
-Same as original Q*bert — jump around the pyramid and color every tile. Don't get hit by enemies.
+Same as original Q*bert: jump around the pyramid and color every tile. Don't get hit by enemies.
 
 ![Gameplay](Overall%20pic.png)
 
@@ -39,8 +39,8 @@ Same as original Q*bert — jump around the pyramid and color every tile. Don't 
 | Enemy | Behavior |
 |-------|----------|
 | **Coily** | Starts as an egg, hatches into a snake and chases you |
-| **Slick** | Goes after tiles you already colored and reverts them. Only from level 3 |
-| **Red Ball** | Bounces straight down randomly — just don't be in the way |
+| **Slick** | Reverts tiles you already colored. Only from level 3 |
+| **Red Ball** | Bounces straight down randomly |
 
 ---
 
@@ -67,7 +67,6 @@ Same as original Q*bert — jump around the pyramid and color every tile. Don't 
 ---
 
 ## Built With
-
 - Java + Java Swing
 - Supabase (community character cabinet)
-- Claude Code (helped me debug and figure out Swing since I'd never used it before)
+- Claude Code (helped me debug and figure out Swing)
